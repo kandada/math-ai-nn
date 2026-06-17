@@ -64,6 +64,14 @@ manuscript/
 
 ---
 
+## 相关论文
+
+基于本书内容整理撰写的学术论文已公开发表预印本。
+
+> **From M-P Neuron to Transformer: A Minimal Mathematical Path with Intuition-First Pedagogy for Deep Learning Education**
+>
+> **DOI：** [https://doi.org/10.6084/m9.figshare.32692401](https://doi.org/10.6084/m9.figshare.32692401)
+
 ## 许可
 
 本作品遵循 [LICENSE](LICENSE) 文件中的完整许可条款。
