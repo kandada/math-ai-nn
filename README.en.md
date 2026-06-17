@@ -27,7 +27,12 @@ en/
 ├── 08-chapter8-modern-architectures.md    # Modern architectures
 ├── 09-chapter9-large-language-models.md   # Large language models
 └── appendix/
-    └── (coming soon)
+    ├── A-mathematical-review.md            # Mathematical review
+    ├── B-pytorch-api.md                    # PyTorch API reference
+    ├── C-notation-conventions.md           # Notation conventions
+    ├── D-common-functions.md               # Common functions
+    ├── E-exercise-answers.md               # Exercise answers
+    └── F-recommended-reading.md            # Recommended reading
 ```
 
 ## Chapter Overview
