@@ -1,6 +1,6 @@
 # 📘 《AI神经网络的数学——用Python、PyTorch讲解》书稿
 
-> 🌐 **语言切换**：[**English**](../README_en.md) | [**中文版**](README.md)
+> 🌐 **语言切换**：[**English**](README.en.md) | [**中文版**](README.md)
 
 
 > **作者**: xiefujin · **邮箱**: 490021684@qq.com
