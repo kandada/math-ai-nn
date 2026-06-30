@@ -6,6 +6,7 @@
 >
 > Starting from fundamental mathematical concepts, reinforced with Python + PyTorch code, this book lets you **see the math in action**.
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## 📋 Chapter Learning Objectives
@@ -27,7 +28,7 @@ Most deep learning books have a **gap between math and code**:
 |:----------|:----------|:-----------|
 | Pure Math (e.g., *The Math of Deep Learning*) | Rigorous mathematical derivations | Uses Excel, cannot handle large-scale data, no automatic gradient computation |
 | Engineering-Focused (e.g., *Dive into Deep Learning*) | Rich hands-on code | Math principles not deep enough; readers know "how" but not "why" |
-| Academic Textbooks (e.g., Goodfellow's *Deep Learning*) | Complete theoretical system | Math门槛 too high; not suitable for self-study |
+| Academic Textbooks (e.g., Goodfellow's *Deep Learning*) | Complete theoretical system | Math barrier too high; not suitable for self-study |
 
 ### The Bridge This Book Builds
 
@@ -41,27 +42,21 @@ This book builds a **bridge between mathematical intuition and code verification
 
 | Feature | Description |
 |:--------|:------------|
-| **Understanding First** | Every数学原理 is explained with intuition and visualization before code |
+| **Understanding First** | Every math principle is explained with intuition and visualization before code |
 | **Visualization** | Matplotlib dynamically shows gradient descent, backpropagation in action |
 | **PyTorch Native** | Gradual transition from manual NumPy to PyTorch autograd |
 | **Transparent Derivation** | No hidden steps; every weight change at every layer is visible |
-| **Comparison Experiments** | Every key环节 has manual vs. automatic computation comparison |
+| **Comparison Experiments** | Every key component has manual vs. automatic computation comparison |
 
 ### Standard Chapter Rhythm
 
 Each chapter follows a consistent "Concept → Visualization → Formula → Code" rhythm:
 
-```text
-Conceptual Intuition (a 30-word "what it's like")
-    ↓
-Visualization (let your eyes "see" the math first)
-    ↓
-Mathematical Formula (annotate every symbol's meaning)
-    ↓
-Code Verification ("look, here's how the math works in code")
-    ↓
-Core Insight (one sentence summary)
-```
+1. **Conceptual Intuition** — a 30-word "what it's like"
+2. **Visualization** — let your eyes "see" the math first
+3. **Math Formula** — annotated with the meaning of each symbol
+4. **Code Verification** — "Look, this is how the math works in practice"
+5. **Core Insight** — one sentence capturing the essence of this section
 
 > **Tip**: If you're a beginner, follow the chapters in order. If you have prior knowledge, you can jump directly to the code sections and refer back to the formulas when you need details.
 
@@ -113,9 +108,10 @@ pip install jupyter            # (Optional) interactive notebooks
 
 The chapters have **strong dependencies**:
 
-```text
-Ch 1-2 (Fundamentals) → Ch 3 (Tools) → Ch 4-5 (Core) → Ch 6-9 (Advanced)
-```
+1. **Chapters 1-2** (Fundamentals) → Chapter 3 (Tools)
+2. **Chapter 3** → Chapters 4-5 (Core ⭐)
+3. **Chapters 4-5** → Chapter 6 (CNN)
+4. **Chapters 7-9** — read by interest
 
 - **Chapters 1-4** are prerequisites for Chapter 5 (backpropagation, the core chapter)
 - **Chapter 5** is a prerequisite for Chapter 6 (CNN)
@@ -199,4 +195,4 @@ Ch 1-2 (Fundamentals) → Ch 3 (Tools) → Ch 4-5 (Core) → Ch 6-9 (Advanced)
 2. **Math self-assessment**: Rate your math level (1-5). Which concepts do you need to review most?
 3. **Toolchain check**: Test your environment with `python3 -c "import torch; print(torch.__version__)"`. If you encounter issues, try searching for solutions online.
 
-→ [Chapter 1: The Idea of Neural Networks](01-chapter1-neural-network-ideas.md)
+← [Table of Contents](README.md) | [Chapter 1](01-chapter1-neural-network-ideas.md) →

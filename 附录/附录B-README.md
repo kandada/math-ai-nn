@@ -2,6 +2,7 @@
 
 > 本附录汇总了本书使用的全部 PyTorch API，按功能分类组织。
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## B-1 Tensor 创建与操作

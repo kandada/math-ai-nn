@@ -2,6 +2,7 @@
 
 > This appendix defines all mathematical symbols used in this book. The same symbol may have different meanings in different contexts; see chapter-specific explanations.
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## C-1 Basic Symbols
@@ -45,3 +46,26 @@
 | $\nabla L$ | Gradient of loss |
 | $\odot$ | Element-wise multiplication |
 | $\frac{\partial L}{\partial W}$ | Gradient of loss w.r.t. weights |
+
+
+## Acronyms
+
+| Abbreviation | Full Name |
+|:------------|:----------|
+| CNN | Convolutional Neural Network |
+| RNN | Recurrent Neural Network |
+| LSTM | Long Short-Term Memory |
+| ResNet | Residual Network |
+| Transformer | Attention-based architecture |
+| LLM | Large Language Model |
+| RLHF | Reinforcement Learning from Human Feedback |
+| SGD | Stochastic Gradient Descent |
+| Adam | Adaptive Moment Estimation |
+| ReLU | Rectified Linear Unit |
+| BCE | Binary Cross-Entropy |
+| MSE | Mean Squared Error |
+| BN | Batch Normalization |
+| MLP | Multi-Layer Perceptron |
+
+← [Appendix B](B-pytorch-api.md) | [Table of Contents](../README.md) | [Appendix D](D-common-functions.md) →
+

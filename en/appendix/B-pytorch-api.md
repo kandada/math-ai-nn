@@ -2,6 +2,7 @@
 
 > This appendix summarizes all PyTorch APIs used in this book, organized by functionality.
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## B-1 Tensor Creation & Operations
@@ -97,3 +98,16 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
 ```
+
+### torchvision Utilities
+
+| API | Description |
+|:----|:------------|
+| `datasets.MNIST(root, train)` | MNIST handwritten digits |
+| `datasets.CIFAR10(root, train)` | CIFAR-10 color images |
+| `transforms.ToTensor()` | PIL Image -> Tensor conversion |
+| `transforms.Normalize(mean, std)` | Standardization |
+| `transforms.Compose(transforms)` | Chain multiple transforms |
+
+← [Appendix A](A-mathematical-review.md) | [Table of Contents](../README.md) | [Appendix C](C-notation-conventions.md) →
+

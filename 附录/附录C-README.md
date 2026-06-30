@@ -2,6 +2,7 @@
 
 > 本附录定义了本书使用的全部数学符号。同一符号在不同上下文中可能有不同含义，具体见各章说明。
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## C-1 基本符号
@@ -33,10 +34,10 @@
 
 | 符号 | 含义 | 说明 |
 |:----|:-----|:-----|
-| $\delta^{(l)}_j$ | 第 $l$ 层第 $j$ 个神经元的误差 | $\delta^{(l)}_j = \frac{\partial C}{\partial u^{(l)}_j}$ |
+| $\delta^{(l)}_j$ | 第 $l$ 层第 $j$ 个神经元的误差 | $\delta^{(l)}_j = \frac{\partial L}{\partial u^{(l)}_j}$ |
 | $\boldsymbol{\delta}^{(l)}$ | 第 $l$ 层的误差向量 | |
-| $C$ | 代价函数（Cost） | 与 $L$（Loss）混用 |
-| $L$ | 损失函数（Loss） | 与 $C$（Cost）混用 |
+| $C$ | 损失函数（Loss） | 全书统一使用「损失函数」，符号为 $L$（第 5 章用 $C$ 表示代价） |
+| $L$ | 损失函数（Loss） | 与 $C$ 含义相同，全书统一使用 $L$ |
 | $\eta$ | 学习率 | 梯度下降的步长 |
 | $\nabla$ | 梯度算子 | $\nabla_\mathbf{W} L$ 表示 Loss 对 W 的梯度 |
 

@@ -2,6 +2,7 @@
 
 > 本附录汇总了神经网络中常用的激活函数和损失函数。
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## D-1 激活函数（Activation Functions）

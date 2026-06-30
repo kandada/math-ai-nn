@@ -2,6 +2,7 @@
 
 > This appendix provides reference answers and explanations for chapter exercises.
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## Chapter 1: The Idea of Neural Networks
@@ -60,3 +61,35 @@ y = x**2 + 3*x + 1
 y.backward()
 print(x.grad)  # 2*2 + 3 = 7
 ```
+
+---
+
+## Chapter 5: Backpropagation
+
+### Exercise 1: Manual Backpropagation Calculation
+
+For $f(x) = \sigma(wx + b)$ at $x=1, w=0.5, b=0$, compute $\frac{\partial f}{\partial w}$:
+
+$$u = 0.5 \times 1 + 0 = 0.5$$
+$$y = \sigma(0.5) = 0.6225$$
+$$\frac{\partial y}{\partial u} = y(1-y) = 0.6225 \times 0.3775 = 0.2350$$
+$$\frac{\partial u}{\partial w} = x = 1$$
+$$\frac{\partial f}{\partial w} = 0.2350 \times 1 = 0.2350$$
+
+> **Explanation**: Using the chain rule, $\frac{\partial f}{\partial w} = \frac{\partial f}{\partial u} \cdot \frac{\partial u}{\partial w} = \sigma'(u) \cdot x$.
+
+---
+
+## Chapter 9: Large Language Models
+
+### Exercise 1: Temperature Parameter Experiment
+
+- `T → 0`: Approaches greedy decoding (highest probability token's probability → 1), output is deterministic but repetitive.
+- `T → ∞`: Approaches uniform sampling, output is random but diverse.
+
+**Best practice**: T = 0.7 ~ 1.0 balances creativity and coherence.
+
+> **Analysis**: Temperature controls the sharpness of the softmax distribution. Lower temperatures amplify probability differences; higher temperatures flatten them.
+
+← [Appendix D](D-common-functions.md) | [Table of Contents](../README.md) | [Appendix F](F-recommended-reading.md) →
+

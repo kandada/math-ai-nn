@@ -2,6 +2,7 @@
 
 > This appendix summarizes common activation functions and loss functions used in neural networks.
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## D-1 Activation Functions
@@ -81,3 +82,17 @@ $$L_{\text{BCE}} = -\frac{1}{m} \sum_{i} (t_i \log p_i + (1-t_i) \log(1-p_i))$$
 | Multi-class classification | Softmax | Cross-Entropy |
 | Regression | None (linear) | MSE |
 | Multi-label classification | Sigmoid | BCE (per label) |
+
+---
+
+## D-4 Regularization Methods
+
+| Method | Formula | Effect |
+|:------|:--------|:-------|
+| L1 Regularization (Lasso) | $\lambda \sum \lvert w_i \rvert$ | Produces sparse weights (some become zero) |
+| L2 Regularization (Ridge) | $\frac{\lambda}{2} \sum w_i^2$ | Weight decay (shrink but not zero) |
+| Dropout | Randomly drop $p\%$ of neurons during training | Ensemble effect, prevents overfitting |
+| Batch Normalization | $\hat{x} = \frac{x - \mu}{\sigma} \cdot \gamma + \beta$ | Stabilizes training, accelerates convergence |
+
+← [Appendix C](C-notation-conventions.md) | [Table of Contents](../README.md) | [Appendix E](E-exercise-answers.md) →
+

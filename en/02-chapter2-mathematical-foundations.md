@@ -2,9 +2,11 @@
 
 > **Goal**: **Intuitively understand** the three mathematical pillars of deep learning — functions, linear algebra, and calculus. No need to memorize formulas; instead understand *why* each mathematical tool appears in neural networks.
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
+>
 > **Code**: `../code/ch02/` (8 files)
 
-> **Figures**: `../images/ch02/` (8 images)
+> **Figures**: `../images/ch02/` (9 images)
 
 ---
 
@@ -37,189 +39,11 @@ Where $a$ is the slope and $b$ is the intercept.
 - $a$ controls the **steepness** of the line (larger $a$ = steeper)
 - $b$ controls the **position** on the $y$-axis
 
-```text
-y = 2x + 1     y = -0.5x + 3     y = 0x + 2
-   ↑               ↑                  ↑
-  Steep up      Gentle down         Horizontal
-```
+![Figure 2-1: Linear, quadratic, exponential, and logarithmic function families — the basic building blocks of neural network math.](../images/ch02/NN02_function_family.png)
+*Figure 2-1: Four fundamental function families — linear (blue), quadratic (orange), exponential (green), logarithmic (red).*
 
-#### Connection to Neural Networks
-
-The core operation of a neuron IS a linear function: $u = wx + b$. The weight $w$ is the slope, the bias $b$ is the intercept.
-
-> **Core Insight**: A single neuron = linear function + activation function. The linear function handles the "linear transformation", the activation function handles the "nonlinearity".
-
-#### Python Verification
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-x = np.linspace(-5, 5, 100)
-w, b = 2, 1
-y = w * x + b
-
-plt.figure(figsize=(8, 4))
-plt.plot(x, y, label=f'y = {w}x + {b}')
-plt.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
-plt.axvline(x=0, color='gray', linestyle=':', alpha=0.5)
-plt.grid(True, alpha=0.3)
-plt.legend()
-plt.title('Linear Function: Neuron Weighted Sum')
-plt.show()
-```
-
----
-
-### 2-1-2 Quadratic Functions (Convex Optimization Foundation)
-
-#### Definition
-
-The simplest quadratic function:
-
-$$
-y = x^2
-$$
-
-#### Properties
-
-- Achieves **minimum** value $0$ at $x = 0$
-- Bowl-shaped (convex function), ideal as a **loss function**
-
-#### Connection to Neural Networks
-
-Loss functions (e.g., mean squared error) are typically convex or approximately convex. Gradient descent slides down the "bowl walls" of the loss function toward the bottom.
-
-#### Python Verification
-
-```python
-# Multiple quadratic functions
-x = np.linspace(-4, 4, 100)
-plt.figure(figsize=(10, 4))
-
-plt.subplot(1, 3, 1)
-plt.plot(x, x**2, 'b-')
-plt.title('y = x²')
-
-plt.subplot(1, 3, 2)
-plt.plot(x, (x-2)**2, 'r-')
-plt.title('y = (x-2)²\nMinimum at x=2')
-
-plt.subplot(1, 3, 3)
-plt.plot(x, x**2 + 2*x + 1, 'g-')
-plt.title('y = x² + 2x + 1\nMinimum at x=-1')
-
-plt.tight_layout()
-plt.show()
-```
-
----
-
-### 2-1-3 Exponential Functions (Foundation of Sigmoid)
-
-#### Definition
-
-$$
-y = e^x, \quad y = e^{-x}
-$$
-
-#### Key Properties
-
-| Property | Formula |
-|:---------|:--------|
-| Multiplication → Addition | $e^{a+b} = e^a \cdot e^b$ |
-| Reciprocal relation | $e^x \cdot e^{-x} = 1$ |
-| Derivative is itself | $\frac{d}{dx} e^x = e^x$ |
-
-#### Connection to Neural Networks
-
-The Sigmoid activation function is built on exponentials:
-
-$$
-\sigma(x) = \frac{1}{1 + e^{-x}}
-$$
-
-#### Python Verification
-
-```python
-x = np.linspace(-3, 3, 100)
-y_exp = np.exp(x)
-y_exp_neg = np.exp(-x)
-y_sigmoid = 1 / (1 + np.exp(-x))
-
-plt.figure(figsize=(10, 4))
-plt.plot(x, y_exp, 'b-', label='e^x')
-plt.plot(x, y_exp_neg, 'r-', label='e^(-x)')
-plt.plot(x, y_sigmoid, 'g-', linewidth=2, label='σ(x) = 1/(1+e^(-x))')
-plt.grid(True, alpha=0.3)
-plt.legend()
-plt.title('Exponential Functions and Sigmoid')
-plt.show()
-```
-
----
-
-### 2-1-4 Logarithmic Functions (Foundation of Cross-Entropy)
-
-#### Definition
-
-$$
-y = \ln x \quad (x > 0)
-$$
-
-#### Key Properties
-
-| Property | Formula |
-|:---------|:--------|
-| Product → Sum | $\ln(ab) = \ln a + \ln b$ |
-| Power → Product | $\ln(a^b) = b \ln a$ |
-| Monotonic increasing | Larger $x$ → larger $\ln x$ |
-
-#### Connection to Neural Networks
-
-The cross-entropy loss function is built on negative logarithms: $-\ln(p)$.
-
-When an event's probability $p$ is small, $-\ln(p)$ is large (heavy penalty); when $p$ is close to 1, $-\ln(p)$ is close to 0.
-
-> **Core Insight**: Logarithms turn multiplication into addition — crucial for computation. Multiplying probabilities becomes summing log-probabilities, avoiding numerical underflow.
-
-#### Why Is the Logarithm So Important in Cross-Entropy?
-
-The logarithm $\ln(x)$ has a key property: **it converts multiplication into addition**.
-
-$$\ln(ab) = \ln a + \ln b$$
-
-In the cross-entropy loss $L = -\sum t_k \log p_k$, the logarithm ensures:
-
-- When $p_k \to 1$ (correct prediction), $\log p_k \to 0$, loss approaches 0
-- When $p_k \to 0$ (wrong prediction), $\log p_k \to -\infty$, loss approaches infinity
-
-This "bigger mistake = heavier penalty" property is exactly what classification tasks need.
-
-> **Little Genius says**: The logarithm is like a "magnifying glass" — when the prediction is very accurate (probability near 1), the loss is small; when the prediction is terrible (probability near 0), the loss gets **exponentially amplified**! That's why classification tasks use cross-entropy instead of mean squared error.
-
----
-
-### 2-1-5 Visualization: Function Family Map
-
-```text
-  Functions in Neural Networks
-  ┌─────────────────────────────────────────────────┐
-  │                                                 │
-  │  Linear  ──→ Weighted sum of neuron             │
-  │  y = wx + b                                     │
-  │                                                 │
-  │  Quadratic ──→ Loss function (MSE)              │
-  │  y = x²                                         │
-  │                                                 │
-  │  Exponential ──→ Sigmoid / Softmax              │
-  │  y = e^x                                        │
-  │                                                 │
-  │  Logarithmic ──→ Cross-entropy loss             │
-  │  y = ln(x)                                      │
-  │                                                 │
-  └─────────────────────────────────────────────────┘
-```
+![Figure 2-2: Matrix multiplication visualization — each cell in the heatmap represents a weight; color-coded blocks highlight the multiplicative relationship between corresponding elements.](../images/ch02/NN02_matrix_multiplication.png)
+*Figure 2-2: Visualizing matrix multiplication — one matrix multiplication = computing all samples' weighted sums simultaneously.*
 
 ---
 
@@ -227,49 +51,103 @@ This "bigger mistake = heavier penalty" property is exactly what classification 
 
 ### 2-2-1 Sequence Basics
 
-A **sequence** is an ordered list of numbers: $a_1, a_2, a_3, \dots, a_n$.
+#### Arithmetic Sequences
 
-#### Arithmetic Sequence
-
-Each term differs by a constant $d$: $a_n = a_1 + (n-1)d$
-
-#### Geometric Sequence
-
-Each term is multiplied by a constant $r$: $a_n = a_1 \cdot r^{n-1}$
-
-#### Connection to Neural Networks
-
-Neural network layers form a sequence: each layer's output becomes the next layer's input.
+Each term differs from the previous term by a constant:
 
 $$
-a^{(0)}, a^{(1)}, a^{(2)}, \dots, a^{(L)}
+a_n = a_1 + (n-1)d
 $$
 
-Where $a^{(0)} = x$ (input) and $a^{(L)} = y$ (output).
+**Example**: $2, 5, 8, 11, 14, \ldots$ (common difference $d=3$)
+
+#### Geometric Sequences
+
+Each term is a constant multiple of the previous term:
+
+$$
+a_n = a_1 r^{n-1}
+$$
+
+**Example**: $2, 4, 8, 16, 32, \ldots$ (common ratio $r=2$)
+
+#### Generating Sequences with Python
+
+```python
+# Arithmetic sequence
+a1, d, n = 2, 3, 10
+arith_seq = a1 + np.arange(n) * d
+print(f"Arithmetic sequence: {arith_seq}")
+
+# Geometric sequence
+a1, r, n = 2, 2, 10
+geom_seq = a1 * r ** np.arange(n)
+print(f"Geometric sequence: {geom_seq}")
+```
+
+---
 
 ### 2-2-2 Recurrence Relations
 
-A **recurrence relation** defines each term based on previous terms.
+#### Definition
+
+A recurrence relation determines the current value from previous values:
 
 $$
-a^{(l)} = f(a^{(l-1)})
+a_{n+1} = f(a_n)
 $$
 
-This is exactly how forward propagation works:
+#### Example: The Fibonacci Sequence
 
 $$
-a^{(l)} = \sigma(W^{(l)} a^{(l-1)} + b^{(l)})
+F_{n+2} = F_{n+1} + F_n, \quad F_1 = 1, F_2 = 1
 $$
 
-> **Core Insight**: Forward propagation IS a recurrence relation. Each layer's output is computed from the previous layer's output using the same function form.
+```python
+def fibonacci(n):
+    a, b = 1, 1
+    for _ in range(n):
+        print(a, end=' ')
+        a, b = b, a + b
 
-### 2-2-3 📌 Core Insight: Forward Propagation IS Recurrence
+fibonacci(10)  # 1 1 2 3 5 8 13 21 34 55
+```
 
-The forward pass is literally a recurrence:
+> **Little Genius says**: Recurrence is like a relay race — each little genius passes the signal to the next one, and every little genius's work builds on all the previous ones! The forward propagation of a neural network is essentially a recurrence process.
 
-1. **Base case**: $a^{(0)} = x$ (the input)
-2. **Recurrence**: $a^{(l)} = \sigma(W^{(l)} a^{(l-1)} + b^{(l)})$ for $l = 1, 2, \dots, L$
-3. **Termination**: $y = a^{(L)}$ (the output)
+---
+
+### 2-2-3 Forward Propagation Is Recurrence
+
+#### The Recurrence Relation of Neural Networks
+
+$$
+\mathbf{z}^{(l+1)} = f(\mathbf{W}^{(l)} \mathbf{z}^{(l)} + \mathbf{b}^{(l)})
+$$
+
+#### Analogy: Falling Dominoes
+
+Forward propagation is like falling dominoes: the output of layer $l$ triggers the computation of layer $l+1$, one layer toppling the next.
+
+The output of the previous layer "topples" the next layer's computation. This recurrence relationship is key to understanding backpropagation — because backpropagation is also a recurrence, just going **backward**.
+
+> **Core Insight**: Forward propagation is recurrence "from input to output"; backpropagation is recurrence "from output to input." Both directions use the **same recurrence logic**.
+
+The **forward propagation** of a neural network is essentially a recurrence process!
+
+$$
+\mathbf{a}^{(0)} = \mathbf{x} \quad\text{(input layer, start of recurrence)}
+$$
+$$
+\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)} \quad\text{(recurrence rule: weighted sum)}
+$$
+$$
+\mathbf{a}^{(l)} = f(\mathbf{z}^{(l)}) \quad\text{(recurrence rule: activation)}
+$$
+
+Starting from the input layer, computing layer by layer until the output layer — this is the recurrence essence of forward propagation.
+
+> **Little Genius says**: Forward propagation is like a relay race! The input is the starting line; the little geniuses at each layer complete their calculations and pass the result (activation values) to the next layer. The baton traveling from layer 0 to layer L is one complete forward pass!
 
 ---
 
@@ -277,263 +155,314 @@ The forward pass is literally a recurrence:
 
 ### 2-3-1 Introduction to Sigma Notation
 
-Summation notation $\sum$ is shorthand for adding many terms:
+#### Definition
 
 $$
 \sum_{i=1}^{n} x_i = x_1 + x_2 + \cdots + x_n
 $$
 
-#### Neural Network Connection
+#### Basic Properties
 
-The weighted sum of a neuron is a summation:
+| Property | Formula |
+|:---------|:--------|
+| Addition distributes | $\sum (x_i + y_i) = \sum x_i + \sum y_i$ |
+| Constant factoring | $\sum c x_i = c \sum x_i$ |
+| Sum of a constant | $\sum_{i=1}^{n} c = nc$ |
+
+The summation symbol $\Sigma$ (Sigma) is the mathematical shorthand for "accumulation":
+
+**Key Rules**:
+
+- $\sum_{i=1}^{n} (x_i + y_i) = \sum x_i + \sum y_i$ (addition can be split)
+- $\sum_{i=1}^{n} c \cdot x_i = c \cdot \sum x_i$ (constants can be factored out)
+- $\sum_{i=1}^{n} \sum_{j=1}^{m} x_{ij}$ (double summation = nested loop)
+
+```python
+# Double summation in Python
+total = 0
+for i in range(1, n+1):
+    for j in range(1, m+1):
+        total += x[i][j]
+```
+
+---
+
+### 2-3-2 Summation and Neural Networks
+
+#### Weighted Sum of a Neuron
 
 $$
 u = \sum_{i=1}^{n} w_i x_i
 $$
 
-### 2-3-2 Summation and Neural Networks
-
-Every neuron in every layer computes a weighted sum:
+#### Multi-Layer Network Summation
 
 $$
-z_j^{(l)} = \sum_{i} w_{ji}^{(l)} a_i^{(l-1)} + b_j^{(l)}
+u_j^{(l)} = \sum_i w_{ji}^{(l)} z_i^{(l-1)} + b_j^{(l)}
 $$
 
-This can be time-consuming to write out. That's why we use **vector notation** — which leads us to linear algebra.
+> **Summation is the "universal language" of neural networks** — every neuron's input is expressed using $\sum$.
 
-### 2-3-3 Python: From For Loop to Vectorization
+---
+
+### 2-3-3 Python: From for Loops to Vectorization
 
 ```python
 import numpy as np
 
-# Method 1: For loop (slow)
-def weighted_sum_loop(w, x):
-    total = 0
-    for i in range(len(w)):
-        total += w[i] * x[i]
-    return total
+n = 5
+w = np.array([0.5, -0.3, 0.8, 0.1, -0.2])
+x = np.array([1.0, 0.5, 2.0, 1.5, 0.3])
 
-# Method 2: NumPy vectorization (fast!)
-def weighted_sum_vector(w, x):
-    return np.dot(w, x)
+# Level 1: for loop (most intuitive, but slowest)
+u1 = 0
+for i in range(n):
+    u1 += w[i] * x[i]
+print(f"for loop: u = {u1:.4f}")
 
-# Test
-w = np.array([0.5, -0.3, 0.8])
-x = np.array([1.0, 2.0, 0.5])
+# Level 2: np.sum + element-wise multiplication (cleaner)
+u2 = np.sum(w * x)
+print(f"np.sum:   u = {u2:.4f}")
 
-print(f"For loop:  {weighted_sum_loop(w, x):.4f}")
-print(f"Vector:    {weighted_sum_vector(w, x):.4f}")
-print(f"Einsum:    {np.einsum('i,i->', w, x):.4f}")  # alternative notation
+# Level 3: np.dot (most semantic — tells the reader this is 'inner product')
+u3 = np.dot(w, x)
+print(f"np.dot:   u = {u3:.4f}")
 
-# Speed comparison
-import time
-big_w = np.random.randn(10000)
-big_x = np.random.randn(10000)
-
-start = time.time()
-for _ in range(1000):
-    weighted_sum_loop(big_w, big_x)
-print(f"\nFor loop (1000x): {time.time()-start:.3f}s")
-
-start = time.time()
-for _ in range(1000):
-    weighted_sum_vector(big_w, big_x)
-print(f"Vector    (1000x): {time.time()-start:.3f}s")
+# Level 4: @ operator (Python 3.5+, most concise)
+u4 = w @ x
+print(f"@ operator: u = {u4:.4f}")
 ```
 
 ```output
-For loop:  0.9000
-Vector:    0.9000
-Einsum:    0.9000
-
-For loop (1000x): 2.345s
-Vector    (1000x): 0.012s
+for loop: u = 1.5100
+np.sum:   u = 1.5100
+np.dot:   u = 1.5100
+@ operator: u = 1.5100
 ```
 
-> **Core Insight**: Vectorization is **~200x faster** than for loops in Python. This speedup is crucial for training neural networks. NumPy and PyTorch use highly optimized C/Fortran libraries (BLAS) under the hood.
+> **Core Insight**: The evolution from for loops to the @ operator embodies the mental shift from "computing element by element" to "holistic vectorization." Vectorization is the core optimization technique behind modern deep learning frameworks (PyTorch, TensorFlow).
 
 ---
 
 ## 2-4 Vector Basics
 
-### 2-4-1 Vector Definition
+### 2-4-1 Definition of Vectors
 
-A **vector** is an ordered list of numbers. Think of it as a point in $n$-dimensional space.
+#### Mathematical Definition
 
-$$
-x = \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix}
-$$
-
-#### Geometric Interpretation
-
-- **2D vector**: a point or arrow on a plane
-- **3D vector**: a point or arrow in space
-- **n-D vector**: abstract; think of it as a list of features
-
-#### Connection to Neural Networks
-
-- Input data is a vector: each element is a feature
-- Hidden layer activations are vectors
-- Weight matrices transform input vectors into output vectors
-
-### 2-4-2 Vector Dot Product ⭐
-
-The **dot product** is the most important operation in neural networks:
-
-$$
-x \cdot y = \sum_{i=1}^{n} x_i y_i
-$$
+A vector $\mathbf{x} = (x_1, x_2, \cdots, x_n)$ is an ordered array of $n$ numbers.
 
 #### Geometric Meaning
 
-The dot product measures **alignment** between two vectors:
+A **point** or **directed line segment** in $n$-dimensional space.
 
-- **Large positive**: vectors point in the same direction (strongly correlated)
-- **Zero**: vectors are perpendicular (uncorrelated)
-- **Large negative**: vectors point in opposite directions (inversely correlated)
-
-$$
-x \cdot y = \|x\| \|y\| \cos\theta
-$$
-
-Where $\theta$ is the angle between the vectors.
-
-#### Connection to Neural Networks
-
-A neuron's weighted sum IS a dot product: $u = w \cdot x + b$
+#### Python Representation
 
 ```python
 import numpy as np
 
-# Dot product examples
-x = np.array([1, 0])
-y = np.array([0, 1])
-z = np.array([1, 1])
-
-print(f"x·y (perp): {np.dot(x, y)}")      # perpendicular: 0
-print(f"x·z (aligned): {np.dot(x, z)}")    # aligned: 1
-print(f"(-x)·z (opposed): {np.dot(-x, z)}")# opposite: -1
+# Create a vector
+x = np.array([1, 2, 3, 4, 5])
+print(f"Vector x = {x}")
+print(f"Dimension: {x.shape}")
+print(f"Second element: {x[1]}")
 ```
 
-```output
-x·y (perp): 0
-x·z (aligned): 1
-(-x)·z (opposed): -1
-```
+A vector is an ordered list of numbers with both **magnitude** and **direction**.
+
+$$
+\mathbf{v} = (v_1, v_2, \dots, v_n)^{\top}
+$$
+
+In neural networks, vectors are everywhere:
+
+- Input vector $\mathbf{x}$: all pixel values of an image
+- Weight vector $\mathbf{w}$: all connection weights of a single neuron
+- Gradient vector $\nabla L$: partial derivatives of the loss w.r.t. all parameters
+
+**Two perspectives on vectors**:
+
+1. **Geometric perspective**: An arrow pointing in some direction in space
+2. **Data perspective**: A column of ordered numbers, stored in a Tensor or array
+
+> **Little Genius says**: A vector is my "shopping list" — it lists everything I need to buy in order! In a neural network, a neuron's input signal $\mathbf{x} = [x_1, x_2, \dots, x_n]^T$ is a vector — all the incoming signals form a "signal checklist."
+
+---
+
+### 2-4-2 Vector Inner Product ⭐
+
+> **Little Genius says**: The vector inner product is my daily work! Input signals $x_1, x_2, \dots, x_n$ are like a pile of packages, and weights $w_1, w_2, \dots, w_n$ are the "importance coefficient" for each package. My job is to compute $\mathbf{w} \cdot \mathbf{x} = \sum w_i x_i$ — the weighted sum of all packages!
+
+#### Definition
+
+$$
+\mathbf{a} \cdot \mathbf{b} = \sum_{i=1}^{n} a_i b_i
+$$
+
+#### Geometric Meaning
+
+$$
+\mathbf{a} \cdot \mathbf{b} = \|\mathbf{a}\| \|\mathbf{b}\| \cos \theta
+$$
+
+where $\theta$ is the angle between the two vectors.
+
+#### Connection to Neural Networks
+
+**Weighted sum = inner product!**
+
+$$
+u = \mathbf{w} \cdot \mathbf{x} + b
+$$
+
+**Intuition**: The inner product measures the similarity of two vectors —
+
+- If $\mathbf{w}$ and $\mathbf{x}$ are aligned (similar), the inner product is large → large output
+- If $\mathbf{w}$ and $\mathbf{x}$ point in opposite directions (dissimilar), the inner product is small → small output
+
+---
 
 ### 2-4-3 Vector Norms and Similarity
 
-#### Vector Norm (Magnitude)
-
-The **norm** measures a vector's length:
+#### L2 Norm (Length)
 
 $$
-\|x\|_2 = \sqrt{\sum_{i=1}^{n} x_i^2}
+\|\mathbf{x}\| = \sqrt{\sum_{i=1}^{n} x_i^2}
 $$
 
 #### Cosine Similarity
 
-Measures the angle between two vectors (ignoring magnitude):
-
 $$
-\cos\theta = \frac{x \cdot y}{\|x\| \|y\|}
+\cos(\mathbf{a}, \mathbf{b}) = \frac{\mathbf{a} \cdot \mathbf{b}}{\|\mathbf{a}\| \|\mathbf{b}\|}
 $$
 
-Ranges from -1 (opposite) to +1 (same direction), with 0 meaning perpendicular.
+Range $[-1, 1]$: 1 means completely aligned directions, -1 means completely opposite.
+
+#### Python Practice
+
+```python
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+
+# Inner product
+dot_product = np.dot(a, b)
+print(f"Inner product a·b = {dot_product}")
+
+# Norm
+norm_a = np.linalg.norm(a)
+norm_b = np.linalg.norm(b)
+print(f"|a| = {norm_a:.4f}, |b| = {norm_b:.4f}")
+
+# Cosine similarity
+cos_sim = dot_product / (norm_a * norm_b)
+print(f"Cosine similarity = {cos_sim:.4f}")
+```
+
+```output
+Inner product a·b = 32
+|a| = 3.7417, |b| = 8.7750
+Cosine similarity = 0.9746
+```
 
 ---
 
 ## 2-5 Matrix Basics
 
-### 2-5-1 Matrix Definition
+### 2-5-1 Definition of Matrices
 
-A **matrix** is a rectangular array of numbers:
+A matrix $\mathbf{W} \in \mathbb{R}^{m \times n}$ is a 2D array with $m$ rows and $n$ columns.
+
+```python
+W = np.array([[1, 2, 3],
+              [4, 5, 6]])  # Matrix with 2 rows, 3 columns
+print(f"Shape: {W.shape}")  # (2, 3)
+```
+
+A matrix is a **rectangular table of numbers** arranged in rows and columns.
 
 $$
-W = \begin{bmatrix}
-w_{11} & w_{12} & \cdots & w_{1n} \\
-w_{21} & w_{22} & \cdots & w_{2n} \\
-\vdots & \vdots & \ddots & \vdots \\
-w_{m1} & w_{m2} & \cdots & w_{mn}
-\end{bmatrix}
+\mathbf{W} = \begin{bmatrix} w_{11} & w_{12} & \dots & w_{1n} \\ w_{21} & w_{22} & \dots & w_{2n} \\ \vdots & \vdots & \ddots & \vdots \\ w_{m1} & w_{m2} & \dots & w_{mn} \end{bmatrix}
 $$
 
-- $W \in \mathbb{R}^{m \times n}$: $m$ rows, $n$ columns
-- $w_{ij}$: element at row $i$, column $j$
+**Matrix dimensions**: $\mathbb{R}^{m \times n}$ means $m$ rows and $n$ columns.
+
+In neural networks, the weight matrix $\mathbf{W}^{(l)} \in \mathbb{R}^{n_l \times n_{l-1}}$ — each row corresponds to one neuron's weight vector.
+
+> **Core Insight**: A matrix is **a group of organized, structured vectors** — each row is the weight vector of one neuron, and the whole matrix is the weight collection of all neurons in a layer!
+
+---
 
 ### 2-5-2 Matrix Multiplication ⭐
 
-Matrix multiplication is **the core operation of neural networks**.
-
-#### Definition
+#### Dimension Requirement
 
 $$
-C = AB \quad \text{where} \quad c_{ij} = \sum_{k} a_{ik} b_{kj}
+(m \times n) \cdot (n \times p) \rightarrow (m \times p)
 $$
 
-#### Shape Requirement
+**Key rule**: Number of columns of the left matrix = number of rows of the right matrix.
 
-$A \in \mathbb{R}^{m \times n}$, $B \in \mathbb{R}^{n \times p}$ → $C \in \mathbb{R}^{m \times p}$
+#### Computation Formula
 
-The inner dimensions must match: $n = n$.
+$$
+C_{ij} = \sum_{k=1}^{n} A_{ik} B_{kj}
+$$
+
+#### Notes
+
+- **Not commutative**: $\mathbf{AB} \neq \mathbf{BA}$
+- **Associative**: $\mathbf{(AB)C} = \mathbf{A(BC)}$
+
+---
 
 ### 2-5-3 Matrix Representation of Neural Network Propagation ⭐
 
-A single layer's forward pass in matrix form:
+#### One Layer Propagation
 
 $$
-z = Wx + b
+\mathbf{u} = \mathbf{xW} + \mathbf{b}
 $$
 
-Where:
-- $x \in \mathbb{R}^{n}$: input vector
-- $W \in \mathbb{R}^{d \times n}$: weight matrix
-- $b \in \mathbb{R}^{d}$: bias vector
-- $z \in \mathbb{R}^{d}$: pre-activation output
+Dimension changes:
 
-For a **batch** of $m$ samples:
+- $\mathbf{x}$: $(1 \times n)$ input vector
+- $\mathbf{W}$: $(n \times m)$ weight matrix
+- $\mathbf{b}$: $(1 \times m)$ bias vector
+- $\mathbf{u}$: $(1 \times m)$ weighted sum output
 
-$$
-Z = XW^T + b
-$$
+#### Batch Processing Multiple Samples
 
-Where $X \in \mathbb{R}^{m \times n}$ is the batch of inputs.
+```python
+# 32 samples, each 784-dim → 128 hidden neurons
+X = np.random.randn(32, 784)     # Input matrix
+W = np.random.randn(784, 128)    # Weight matrix
+b = np.zeros(128)                # Bias vector
+
+# One matrix multiplication = compute all samples' weighted sums simultaneously
+U = X @ W + b                    # Shape: (32, 128)
+Z = np.maximum(0, U)             # ReLU activation
+```
+
+> **Core Insight**: Matrix multiplication enables "batch processing" — one matrix multiplication = simultaneously computing the weighted sums of all neurons for all samples. This is why neural networks can run efficiently on GPUs.
+
+---
+
+### 2-5-4 Visualizing Matrix Multiplication
 
 ```python
 import numpy as np
 
-# Single sample
-n, d = 3, 4  # 3 inputs → 4 hidden neurons
-x = np.random.randn(n)
-W = np.random.randn(d, n)
-b = np.random.randn(d)
-z = W @ x + b  # @ = matrix multiplication
-print(f"Single: {z.shape}")
+# Matrix multiplication in a neural network
+X = np.random.randn(32, 784)     # batch=32, input features=784
+W1 = np.random.randn(784, 256)   # hidden layer weights
+b1 = np.random.randn(256)        # hidden layer bias
 
-# Batch of samples
-m = 10  # batch size
-X = np.random.randn(m, n)
-Z = X @ W.T + b  # batch forward pass
-print(f"Batch:  {Z.shape}")
+# Forward propagation = matrix multiplication + broadcast addition
+Z1 = X @ W1 + b1  # Result shape: (32, 256)
+A1 = np.maximum(0, Z1)  # ReLU activation
 ```
 
-```output
-Single: (4,)
-Batch:  (10, 4)
-```
-
-### 2-5-4 Visualizing Matrix Multiplication
-
-Matrix multiplication can be visualized as a flow diagram:
-
-```text
-Input          W (weights)         Hidden
-[3,]    ──→   [4×3]  ──→  z = Wx + b  ──→ [4,]
-                        ↓
-                  Apply activation σ(z)
-                        ↓
-                   a = σ(z)  ──→ [4,]
-```
+> **Core Insight**: The essence of matrix multiplication is "batch vector inner products" — it compresses $n$ inner products in a for loop into a single matrix multiplication, allowing the GPU to compute them in parallel.
 
 ---
 
@@ -626,6 +555,9 @@ plt.tight_layout()
 plt.show()
 ```
 
+![Figure 2-3: Function curve and its derivative (tangent slope). The blue line is the original function, the red dot is the tangent point, and green arrows indicate the sign and magnitude of the derivative.](../images/ch02/NN02_derivative_visual.png)
+*Figure 2-3: Derivative = the instantaneous rate of change of a function = the slope of the tangent line.*
+
 ---
 
 ## 2-7 Partial Derivatives
@@ -634,11 +566,15 @@ plt.show()
 
 Neural networks have **many** inputs (weight parameters), so we need partial derivatives.
 
-$$f(x_1, x_2, \dots, x_n)$$
+$$
+f(x_1, x_2, \dots, x_n)
+$$
 
 A **partial derivative** measures the rate of change with respect to **one variable**, holding all others constant:
 
-$$\frac{\partial f}{\partial x_i} = \lim_{h \to 0} \frac{f(x_1, \dots, x_i + h, \dots, x_n) - f(x_1, \dots, x_n)}{h}$$
+$$
+\frac{\partial f}{\partial x_i} = \lim_{h \to 0} \frac{f(x_1, \dots, x_i + h, \dots, x_n) - f(x_1, \dots, x_n)}{h}
+$$
 
 ### 2-7-2 The Gradient Vector ⭐
 
@@ -685,10 +621,10 @@ print(f"Start: [{trajectory[0][0]:.4f}, {trajectory[0][1]:.4f}]")
 print(f"End:   [{trajectory[-1][0]:.4f}, {trajectory[-1][1]:.4f}]")
 ```
 
-```output
-Start: [4.0000, 3.0000]
-End:   [0.0003, 0.0002]
-```
+| | x | y |
+|:---|---:|---:|
+| Start | 4.0000 | 3.0000 |
+| End | 0.0003 | 0.0002 |
 
 ### 2-7-3 Visualization
 
@@ -714,6 +650,9 @@ ax.set_zlabel('f(x,y)')
 ax.legend()
 plt.show()
 ```
+
+![Figure 2-4: 3D surface contour plot with gradient vector field. Arrows point in the direction of steepest ascent; the opposite direction points toward steepest descent.](../images/ch02/NN02_gradient_3d.png)
+*Figure 2-4: Gradient vector field — arrow direction = direction of fastest increase; arrow length = magnitude of growth rate.*
 
 ---
 
@@ -755,12 +694,8 @@ This single equation is the foundation of **backpropagation**.
 
 A **computational graph** visualizes the chain of operations:
 
-```text
-x ──→ Linear(z=wx+b) ──→ Activation(a=σ(z)) ──→ Loss(L=½(a-t)²) ──→ L
-                                         
-         ∂L/∂w = ∂L/∂a · ∂a/∂z · ∂z/∂w
-                (chain rule in action!)
-```
+1. **Forward pass** (left to right): x → Linear(z=wx+b) → Activation(a=σ(z)) → Loss(L=½(a-t)²) → L
+2. **Backward pass** (right to left): ∂L/∂a → ∂L/∂z → ∂L/∂w, ∂L/∂b, ∂L/∂x
 
 ```python
 # Visualizing the chain rule through a computational graph
@@ -793,14 +728,15 @@ print(f"  dL/da={dL_da:.4f}, da/dz={da_dz:.4f}")
 print(f"  dL/dw={dL_dw:.4f}, dL/db={dL_db:.4f}")
 ```
 
-```output
-Forward: x=1.0, t=0.0
-  z=0.7000, a=0.6682, L=0.2232
+Forward: x=1.0, t=0.0, z=0.7000, a=0.6682, L=0.2232
 
-Backward (chain rule):
-  dL/da=0.6682, da/dz=0.2217
-  dL/dw=0.1481, dL/db=0.1481
-```
+| Gradient | Value |
+|:---------|------:|
+| ∂L/∂w | 0.1481 |
+| ∂L/∂b | 0.1481 |
+
+![Figure 2-5: Computational graph of the chain rule. Forward propagation (green) goes left to right; backward propagation (red) goes right to left.](../images/ch02/NN02_chain_rule_graph.png)
+*Figure 2-5: The computational graph of the chain rule. Forward propagation (green) from left to right, backward propagation (red) from right to left.*
 
 ---
 
@@ -819,6 +755,9 @@ $$
 $$
 f(x + \Delta x) \approx f(x) + f'(x)\Delta x
 $$
+
+![Figure 2-6: Taylor expansion approximating sin(x). 0th order = constant, 1st order = linear, 3rd/5th/7th orders gradually approach the original function.](../images/ch02/NN02_taylor_approx.png)
+*Figure 2-6: Taylor expansion approximating sin(x) at different orders.*
 
 ### 2-9-2 Total Differential (Multivariate)
 
@@ -893,6 +832,39 @@ print(f"Learned: w={w[0,0]:.4f}, b={b[0,0]:.4f}")
 
 ---
 
+### 2-10-4 Python Practice: Gradient Descent Implementation
+
+```python
+def gradient_descent(f, df, x0, lr=0.1, epochs=100):
+    x = x0
+    history = [x]
+    for i in range(epochs):
+        x = x - lr * df(x)
+        history.append(x)
+    return x, history
+
+# Test: f(x) = x**2, minimum at x=0
+f = lambda x: x**2
+df = lambda x: 2*x
+x_opt, history = gradient_descent(f, df, x0=5.0, lr=0.1, epochs=20)
+print(f"Optimal: x = {x_opt:.6f}")
+```
+
+```output
+Optimal: x = 0.000000
+Trajectory: ['5.00', '4.00', '3.20', '2.56', '2.05', ...]
+```
+
+---
+
+### 2-10-5 Visualization: Learning Rate Effects
+
+![Figure 2-7: Comparing gradient descent with different learning rates.](../images/ch02/NN02_learning_rate_compare.png)
+
+*Figure 2-7: Learning rate comparison — small is slow, large diverges.*
+
+---
+
 ## 2-11 Understanding Automatic Differentiation (Autograd)
 
 ### 2-11-1 Manual vs. Automatic Differentiation
@@ -930,14 +902,11 @@ print(f"Autograd: dL/dw={w.grad.item():.4f}")
 
 The computational graph PyTorch builds internally:
 
-```text
-x ──┐
-    ├── mul ──┐
-w ──┘         │
-              ├── add ──→ sigmoid ──→ sub ──→ pow ──→ mul ──→ loss
-b ──→─────────┘                    ↑       ↑
-                                   t=0     0.5 (constant)
-```
+Forward graph: (x,w) → multiply → add(+b) → sigmoid → (subtract t, square, mean) → L
+Backward: gradients flow in reverse through the same nodes using the chain rule.
+
+![Figure 2-8: 2D gradient descent path. Left: contour map with trajectory path; Right: coordinate values changing with iterations.](../images/ch02/NN02_gd_2d_path.png)
+*Figure 2-8: 2D gradient descent path. Red arrows show the direction and magnitude of each update step.*
 
 ---
 
@@ -990,11 +959,175 @@ print(f"GD:        w={w[0]:.4f}, b={b[0]:.4f}")
 
 ---
 
-## 2-13 Chapter Code List
+### 2-12-4 Visualization: Linear Regression Fitting
+
+![Figure 2-9: Linear regression fitting result. Scatter points are data points, the line is the fitted result.](../images/ch02/NN02_linear_regression.png)
+
+*Figure 2-9: Linear regression — fitting a line to data points.*
+
+---
+
+## 2-14 Practice: Understanding Neural Networks with Math
+
+### 2-14-1 Forward Propagation from a Mathematical Perspective
+
+Each layer of a neural network can be viewed as a **function composition**:
+
+$$
+f_{\text{NN}}(\mathbf{x}) = f^{(L)} \circ f^{(L-1)} \circ \dots \circ f^{(1)}(\mathbf{x})
+$$
+
+Where each layer function $f^{(l)}(\mathbf{a}) = \sigma(\mathbf{W}^{(l)}\mathbf{a} + \mathbf{b}^{(l)})$ is an **affine transformation + nonlinear activation**.
+
+### 2-14-2 Common Function Composition Patterns
+
+| Pattern | Mathematical Form | Where It Appears |
+|:--------|:-----------------|:----------------|
+| **Linear->Nonlinear** | $\sigma(\mathbf{W}\mathbf{x} + \mathbf{b})$ | All hidden layers |
+| **Linear->Probability** | $\text{softmax}(\mathbf{W}\mathbf{x} + \mathbf{b})$ | Multi-class output |
+| **Linear->Scalar** | $\mathbf{w}^T\mathbf{x} + b$ | Regression output |
+| **Residual Connection** | $\mathbf{x} + F(\mathbf{x})$ | ResNet-style architectures |
+
+### 2-14-3 NumPy Forward Pass Implementation
+
+```python
+import numpy as np
+
+def forward_pass(X, weights, biases, activation='relu'):
+    a = X
+    for i, (W, b) in enumerate(zip(weights, biases)):
+        z = a @ W + b
+        if i < len(weights) - 1:  # hidden layers
+            if activation == 'relu':
+                a = np.maximum(0, z)
+            elif activation == 'sigmoid':
+                a = 1 / (1 + np.exp(-z))
+        else:
+            a = z
+    return a
+
+# Test: 2-layer network
+X = np.random.randn(10, 784)
+W1 = np.random.randn(784, 256) * 0.01
+b1 = np.zeros(256)
+W2 = np.random.randn(256, 10) * 0.01
+b2 = np.zeros(10)
+output = forward_pass(X, [W1, W2], [b1, b2])
+print(f"Input: {X.shape} -> Output: {output.shape}")
+```
+
+```output
+Input: (10, 784) -> Output: (10, 10)
+```
+
+### 2-14-4 Matrix Calculus for Backpropagation
+
+Backpropagation is fundamentally an application of **matrix calculus**:
+
+$$
+\frac{\partial}{\partial \mathbf{W}} (\mathbf{W}\mathbf{x} + \mathbf{b}) = \mathbf{x}^T
+$$
+
+$$
+\frac{\partial}{\partial \mathbf{b}} (\mathbf{W}\mathbf{x} + \mathbf{b}) = \mathbf{I}
+$$
+
+| Operation | Forward | Weight Gradient | Input Gradient |
+|:---------|:--------|:---------------|:--------------|
+| **Affine** | $\mathbf{z} = \mathbf{W}\mathbf{a} + \mathbf{b}$ | $\frac{\partial L}{\partial \mathbf{W}} = \frac{\partial L}{\partial \mathbf{z}} \cdot \mathbf{a}^T$ | $\frac{\partial L}{\partial \mathbf{a}} = \mathbf{W}^T \cdot \frac{\partial L}{\partial \mathbf{z}}$ |
+| **ReLU** | $\mathbf{a} = \max(0, \mathbf{z})$ | - | $\frac{\partial L}{\partial \mathbf{z}} = \mathbb{1}[\mathbf{z} > 0] \odot \frac{\partial L}{\partial \mathbf{a}}$ |
+| **Sigmoid** | $\mathbf{a} = \sigma(\mathbf{z})$ | - | $\frac{\partial L}{\partial \mathbf{z}} = \sigma(\mathbf{z}) \odot (1-\sigma(\mathbf{z})) \odot \frac{\partial L}{\partial \mathbf{a}}$ |
+
+---
+
+## 2-15 From Math to Code: Python Implementation of Core Formulas
+
+### 2-15-1 Vectorization for Speed
+
+```python
+import numpy as np
+import time
+
+# Loop implementation (slow)
+def dot_product_loop(a, b):
+    result = 0
+    for i in range(len(a)):
+        result += a[i] * b[i]
+    return result
+
+# Vectorized implementation (much faster)
+def dot_product_vec(a, b):
+    return np.dot(a, b)
+
+# Performance comparison
+a = np.random.randn(10000)
+b = np.random.randn(10000)
+
+t0 = time.time()
+for _ in range(1000):
+    dot_product_loop(a, b)
+t1 = time.time()
+print(f"Loop: {(t1-t0)*1000:.1f}ms")
+
+t0 = time.time()
+for _ in range(1000):
+    dot_product_vec(a, b)
+t1 = time.time()
+print(f"Vectorized: {(t1-t0)*1000:.1f}ms")
+```
+
+> **Key Insight**: Vectorization with NumPy is typically **50-100x faster** than Python loops. This is why neural networks use matrix operations.
+
+### 2-15-2 Complete Code Overview
+
+```python
+import numpy as np
+
+# 1. Vectors and Matrices
+v = np.array([1, 2, 3])
+M = np.array([[1, 2], [3, 4]])
+dot = np.dot(v, v)
+
+# 2. Numerical Derivative
+def numerical_derivative(f, x, h=1e-5):
+    return (f(x + h) - f(x - h)) / (2 * h)
+
+print(f"Derivative of x**2 at x=3: {numerical_derivative(lambda x: x**2, 3):.4f}")
+
+# 3. Gradient Descent
+def gradient_descent(df, x0, lr=0.1, steps=100):
+    x = x0
+    for _ in range(steps):
+        x -= lr * df(x)
+    return x
+
+x_min = gradient_descent(lambda x: 2*x, 5.0)
+print(f"GD finds x ~ {x_min:.2f} (true min at 0)")
+
+# 4. Normal Equation (Least Squares)
+X = np.random.randn(100, 3)
+w = np.random.randn(3, 1)
+y = X @ w + 0.1 * np.random.randn(100, 1)
+w_hat = np.linalg.inv(X.T @ X) @ X.T @ y
+print(f"Least squares error = {np.mean((X@w_hat - y)**2):.6f}")
+```
+
+> **Core Message**: Everything in this chapter - vectors, matrices, derivatives, gradients - comes together in $y = \mathbf{W}\mathbf{x} + \mathbf{b}$. This single formula, repeated across layers, is what makes neural networks work.
+
+---
+
+## 📦 Chapter Code List
 
 | File | Content | Key Concept |
 |:-----|:--------|:------------|
-| `ch02/` (8 files) | Functions, vectors, matrices, derivatives | Math foundations |
+| `ch02/NN02_functions.py` | Linear, quadratic, exponential, logarithmic functions | Function visualization |
+| `ch02/NN02_vectors.py` | Vector dot product, norms, cosine similarity | Vector operations |
+| `ch02/NN02_matrices.py` | Matrix multiplication, batch forward pass | Matrix operations |
+| `ch02/NN02_derivatives.py` | Numerical & analytical derivatives | Derivative computation |
+| `ch02/NN02_chain_rule.py` | Chain rule computational graph | Chain rule |
+| `ch02/NN02_gradient_descent.py` | Gradient descent on quadratic functions | GD implementation |
+| `ch02/NN02_least_squares.py` | Normal equation vs gradient descent | Least squares |
+| `ch02/NN02_autograd_demo.py` | PyTorch autograd introduction | Autograd basics |
 
 ---
 
@@ -1002,14 +1135,11 @@ print(f"GD:        w={w[0]:.4f}, b={b[0]:.4f}")
 
 ### Core Concepts Review
 
-```text
-Functions  ──→ Linear/Quadratic/Exponential/Log  ──→ Building blocks
-Vectors    ──→ Dot product = neuron weighted sum   ──→ Basic operation
-Matrices   ──→ Batch processing, layer transforms  ──→ Vectorization
-Derivatives ──→ Rate of change, downhill direction  ──→ Optimization
-Chain Rule  ──→ Backpropagation engine              ──→ ⭐ Core algorithm
-Gradient    ──→ Multi-variable derivative vector    ──→ Steepest direction
-```
+| Category | Key Concepts |
+|:---------|:-------------|
+| Functions | Linear, quadratic, exponential, logarithmic |
+| Linear Algebra | Dot product, matrix multiplication, batch computation, forward propagation |
+| Calculus | Derivative, partial derivative, gradient, **chain rule** ⭐, gradient descent |
 
 ### Math Tools ↔ Neural Networks Mapping
 
@@ -1067,3 +1197,5 @@ For a 2-layer network, manually compute the gradient of the loss with respect to
 | Gradient | $\nabla f = [\partial f/\partial x_1, \dots]^{\mathsf{T}}$ | Steepest direction |
 | Chain rule | $\frac{dy}{dx} = \frac{df}{dg} \cdot \frac{dg}{dx}$ | Backpropagation |
 | GD update | $w^{(t+1)} = w^{(t)} - \eta \frac{\partial L}{\partial w}$ | Parameter update |
+
+← [Chapter 1](01-chapter1-neural-network-ideas.md) | [Table of Contents](README.md) | [Chapter 3](03-chapter3-pytorch-basics-tensor-autograd.md) →

@@ -2,6 +2,7 @@
 
 > 本附录列出深度学习核心参考资源，按难度分级推荐。
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## F-1 核心教材

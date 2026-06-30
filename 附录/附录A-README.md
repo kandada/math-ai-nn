@@ -2,6 +2,7 @@
 
 > 本附录汇总了阅读本书所需的全部数学公式。分为微积分、线性代数、概率统计、信息论四大部分。
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## A-1 微积分（Calculus）

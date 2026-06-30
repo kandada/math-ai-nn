@@ -2,7 +2,9 @@
 
 > **目标**：理解 PyTorch 两大核心——Tensor 和 Autograd——**背后的数学逻辑**，为后续用代码验证数学原理做好准备。
 
-> **代码文件**：`code/ch03/`（7 个文件）
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
+>
+> **代码文件**：`code/ch03/`（9 个文件）
 
 > **插图**：`images/ch03/`（2 张图）
 
@@ -249,6 +251,8 @@ b = a.squeeze()            # (3,4)  # 恢复原状
 
 > **提示**：`unsqueeze` 和 `squeeze` 在 CNN 中极其常用——图像通常是 4D Tensor `(batch, channels, height, width)`，而全连接层需要 2D `(batch, features)`。
 
+## 3-4 Autograd 自动微分 ⭐
+
 ### 3-4-1 什么是 Autograd？
 
 **Autograd** = Automatic Differentiation（自动微分）。
@@ -352,11 +356,7 @@ L = 0.0312
 
 每执行一步运算，PyTorch 就在计算图中添加一个**节点**：
 
-```text
-w → ┐
-x → × → u → sigmoid → y → 平方误差 → L
-b → ┘
-```
+计算图: (w,x) → 乘法 → 加法(+b) → sigmoid → 平方误差 → L
 
 图中的每个节点都知道：
 
@@ -402,13 +402,11 @@ print(f"∂L/∂x = {x.grad.item():.4f}")
 
 `L.backward()` 的内部流程：
 
-```text
-Step 1: 从 L 开始（输出节点）
-Step 2: 找到 L 的 grad_fn（运算来源）
-Step 3: 沿着计算图反向遍历
-Step 4: 在每个运算节点应用链式法则
-Step 5: 梯度累积到对应 Tensor 的 .grad 属性
-```
+L.backward() 内部流程：
+1. 从 L 开始，找到其 grad_fn
+2. 沿计算图反向遍历
+3. 在每个运算节点应用链式法则
+4. 梯度累积到对应 Tensor 的 .grad 属性
 
 相当于自动做了第 2 章 2-8 节中我们手动做的所有链式法则计算：
 
@@ -441,16 +439,13 @@ losses.backward(torch.ones_like(losses))  # 等价于 loss.sum().backward()
 
 #### 内部流程
 
-```text
-调用 L.backward() 后：
-
-Step 1: 从 L 对应的计算图节点开始
-Step 2: 检查 L 的 grad_fn（记录运算来源）
-Step 3: 沿着 grad_fn 链反向遍历计算图
-Step 4: 在每个节点执行「局部链式法则」——将上游梯度 × 局部梯度
-Step 5: 将计算出的梯度累积到叶子节点的 .grad 属性
-Step 6: 释放计算图（默认）以节省内存
-```
+L.backward() 内部流程：
+1. 从 L 对应的计算图节点开始
+2. 检查 L 的 grad_fn（记录运算来源）
+3. 沿着 grad_fn 链反向遍历计算图
+4. 在每个节点执行「局部链式法则」——上游梯度 × 局部梯度
+5. 将计算出的梯度累积到叶子节点的 .grad 属性
+6. 释放计算图（默认）以节省内存
 
 ### 3-4-6 grad 的累积特性 ⚠️
 
@@ -567,6 +562,30 @@ with torch.no_grad():
 ![图 3-1：PyTorch 计算图的可视化。绿色节点是 Tensor（叶子节点），蓝色节点是运算（grad_fn），箭头表示数据流方向。](images/ch03/NN03_computational_graph.png)
 
 *图 3-1：计算图可视化。从 x、w、b 出发，经过乘法、加法、Sigmoid、平方最终得到损失 L。*
+
+---
+
+### 3-5-5 计算图中的前向与反向
+
+> **小精灵说**：计算图就像一张「任务流程图」——前向传播从左到右画箭头，反向传播从右到左传数字（梯度）。看懂这张图，就理解了 autograd 的本质！
+
+#### 完整计算图可视化
+
+运行 `code/ch03/NN03_computation_graph_viz.py` 可以自动绘制计算图：
+
+```python
+# 计算图: L = (y - 1)², y = u · v, u = w · x + b
+#
+#     x(2.0) ──┐
+#               ├──→ u(2.0) ──→ y(6.0) ──→ L(25.0)
+#     w(0.5) ──┘                    ↑
+#     b(1.0) ──┘                    v(3.0)
+#
+# 反向传播梯度:
+#   ∂L/∂w = 60.0   ∂L/∂x = 15.0   ∂L/∂b = 30.0   ∂L/∂v = 20.0
+```
+
+> **核心洞察**：计算图将反向传播分解为**局部梯度 × 上游梯度**的链式法则。每个节点只需计算自己输出的局部梯度，然后与上游传来的梯度相乘，就得到了该节点输入的梯度。这正是 autograd 的数学本质！
 
 ---
 
@@ -859,7 +878,6 @@ for epoch in range(10):
 > 如果忘记清零，梯度会累积，导致参数更新方向和大小都完全错误。
 
 
-
 ---
 
 ## ⚠️ PyTorch 常见陷阱与调试指南
@@ -912,29 +930,9 @@ loss.backward()  # ❌ 可能报错
 
 ---
 
-## 📦 本章代码清单
+## 3-9 Autograd 深度解析
 
-| 文件 | 内容 | 核心知识点 |
-|:----|:-----|:----------|
-| `ch03/NN03_tensor_basics.py` | Tensor 的创建、属性与基本运算 | Tensor 核心概念 |
-| `ch03/NN03_broadcasting.py` | Broadcasting 广播机制演示 | 广播规则 |
-| `ch03/NN03_autograd_demo.py` | Autograd 自动微分演示 | 自动求导 |
-| `ch03/NN03_computational_graph.py` | 计算图构建与可视化 | 计算图机制 |
-| `ch03/NN03_nn_module.py` | 用 nn.Module 构建神经网络 | 模块化编程 |
-| `ch03/NN03_dataset_dataloader.py` | Dataset 与 DataLoader 数据管道 | 数据加载 |
-| `ch03/NN03_training_loop.py` | 完整训练循环实现 | 训练四步曲 |
-
----
-
-## 📖 本章小结
-
-
-
----
-
-## 3-11 AUTograd 深度解析
-
-### 3-11-1 计算图的构建时机
+### 3-9-1 计算图的构建时机
 
 PyTorch 使用**动态计算图**（Dynamic Graph）——每次前向传播都重新构建计算图。
 
@@ -959,7 +957,7 @@ for i in range(3):
 
 > **核心洞察**：动态图意味着你可以在每次前向传播时**改变网络结构**——比如根据输入长度动态添加层、使用条件分支等。这是 PyTorch 相比于 TensorFlow 1.x（静态图）最大的优势。
 
-### 3-11-2 梯度累积与清零
+### 3-9-2 梯度累积与清零
 
 ```python
 # 演示梯度累积现象
@@ -974,11 +972,13 @@ for i in range(3):
 # 注意观察到梯度正在累加！
 ```
 
-```output
-第1次后: x.grad = tensor([2., 4., 6.])    
-第2次后: x.grad = tensor([4., 8., 12.])   ← 翻倍了！
-第3次后: x.grad = tensor([6., 12., 18.])  ← 三倍了！
-```
+
+| 次数 | x.grad | 说明 |
+|:---:|:-------|:-----|
+| 第1次 | [2, 4, 6] | 初始梯度 |
+| 第2次 | [4, 8, 12] | 翻倍了（梯度累积） |
+| 第3次 | [6, 12, 18] | 三倍了（梯度累积） |
+
 
 **梯度累积的用途**：在显存不足时，可以用梯度累积来模拟更大的 batch size。
 
@@ -992,7 +992,7 @@ for micro_batch in range(4):  # 4 个 micro-batch
 optimizer.step()  # 等效于 batch_size × 4 的效果
 ```
 
-### 3-11-3 detach()：从计算图中分离
+### 3-9-3 detach()：从计算图中分离
 
 有时候我们需要从计算图中「摘下」一个 Tensor，让它不参与梯度计算：
 
@@ -1011,7 +1011,7 @@ features = features.detach()  # 冻结 backbone 的梯度
 output = classifier(features)  # 只训练 classifier
 ```
 
-### 3-11-4 no_grad() vs inference_mode()
+### 3-9-4 no_grad() vs inference_mode()
 
 PyTorch 提供了两种上下文管理器来禁用梯度追踪：
 
@@ -1031,9 +1031,9 @@ def predict(model, x):
 
 ---
 
-## 3-12 PyTorch 调试实战
+## 3-10 PyTorch 调试实战
 
-### 3-12-1 常见错误及解决方案
+### 3-10-1 常见错误及解决方案
 
 ```python
 # 错误 1：形状不匹配
@@ -1053,7 +1053,7 @@ except Exception as e:
 | **梯度为 None** | `can't access gradient of non-leaf Tensor` | 只对叶节点（参数）访问 `.grad` |
 | **原地操作** | `one of the variables needed for gradient computation has been modified` | 使用 `a = a + 1` 而非 `a += 1` |
 
-### 3-12-2 用 hook 调试中间层
+### 3-10-2 用 hook 调试中间层
 
 PyTorch 的 hook 机制让你可以「偷看」中间层的输出和梯度：
 
@@ -1077,7 +1077,7 @@ x = torch.randn(1, 784)
 out = model(x)
 ```
 
-### 3-12-3 TensorBoard 可视化
+### 3-10-3 TensorBoard 可视化
 
 ```python
 from torch.utils.tensorboard import SummaryWriter
@@ -1105,6 +1105,25 @@ writer.close()
 
 > **小精灵说**：TensorBoard 就像是给小精灵们装的「监控摄像头」！你可以实时看到训练过程中的 loss 曲线、参数变化、梯度大小——就像看股票走势图一样！发现问题，及时调整，不用等 100 个 epoch 跑完才发现不对劲！
 
+---
+
+## 📦 本章代码清单
+
+| 文件 | 内容 | 核心知识点 |
+|:----|:-----|:----------|
+| `ch03/NN03_tensor_basics.py` | Tensor 的创建、属性与基本运算 | Tensor 核心概念 |
+| `ch03/NN03_broadcasting.py` | Broadcasting 广播机制演示 | 广播规则 |
+| `ch03/NN03_autograd_demo.py` | Autograd 自动微分演示 | 自动求导 |
+| `ch03/NN03_computational_graph.py` | 计算图构建与可视化 | 计算图机制 |
+| `ch03/NN03_computation_graph_viz.py` | 计算图前向/反向对比可视化 | 计算图深度理解 |
+| `ch03/NN03_mnist_viz.py` | MNIST 数据集样本可视化 | 数据可视化 |
+| `ch03/NN03_nn_module.py` | 用 nn.Module 构建神经网络 | 模块化编程 |
+| `ch03/NN03_dataset_dataloader.py` | Dataset 与 DataLoader 数据管道 | 数据加载 |
+| `ch03/NN03_training_loop.py` | 完整训练循环实现 | 训练四步曲 |
+
+---
+
+## 📖 本章小结
 
 ### 🧪 课后练习
 
@@ -1161,10 +1180,6 @@ y = torch.tensor(1.0, requires_grad=True)
 
 > **一句话总结**：PyTorch = Tensor（数据容器）+ Autograd（自动求导）+ nn.Module（网络模板）+ DataLoader（数据管道）。训练循环四步曲：zero_grad → 前向 → backward → step。
 
-> **PyTorch 的核心思维**：定义网络（`nn.Module`）→ 定义损失（`nn.Loss`）→ 定义优化器（`optim.Optimizer`）→ 循环：`zero_grad()` → `backward()` → `step()`。
-
----
-
 ### 核心公式速查
 
 | 公式 / 代码 | 说明 | 适用场景 |
@@ -1177,4 +1192,5 @@ y = torch.tensor(1.0, requires_grad=True)
 | `nn.Sequential(Linear(784,256), ReLU())` | 顺序容器构建网络 | 快速搭建模型 |
 
 
-← [第 2 章 神经网络的数学基础](02-第2章-神经网络的数学基础.md) | [目录](README.md) | [第 4 章 神经网络的最优化](04-第4章-神经网络的最优化.md) →
+← [第 2 章 神经网络的数学基础](02-第2章-神经网络的数学基础.md) | [目录](README.md) | [第 4 章 神经网络的训练与优化](04-第4章-神经网络的训练与优化.md) →
+

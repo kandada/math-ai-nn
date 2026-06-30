@@ -27,7 +27,12 @@ en/
 ├── 08-chapter8-modern-architectures.md    # Modern architectures
 ├── 09-chapter9-large-language-models.md   # Large language models
 └── appendix/
-    └── (coming soon)
+    ├── A-mathematical-review.md            # Mathematical review
+    ├── B-pytorch-api.md                    # PyTorch API reference
+    ├── C-notation-conventions.md           # Notation conventions
+    ├── D-common-functions.md               # Common functions
+    ├── E-exercise-answers.md               # Exercise answers
+    └── F-recommended-reading.md            # Recommended reading
 ```
 
 ## Chapter Overview
@@ -63,6 +68,14 @@ python3 tools/build_epub.py --lang en
 # or
 python3 tools/build_pdf.py --lang en
 ```
+
+## Related Paper
+
+A preprint paper based on this book has been published:
+
+> **From M-P Neuron to Transformer: A Minimal Mathematical Path with Intuition-First Pedagogy for Deep Learning Education**
+>
+> **DOI:** [https://doi.org/10.6084/m9.figshare.32692401](https://doi.org/10.6084/m9.figshare.32692401)
 
 ## License
 

@@ -2,6 +2,7 @@
 
 > This appendix summarizes all mathematical formulas needed for this book. Organized into calculus, linear algebra, probability & statistics, and information theory.
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## A-1 Calculus
@@ -80,3 +81,5 @@ For $f(x_1, x_2, \dots, x_n)$, the partial derivative $\frac{\partial f}{\partia
 | Entropy | $H(p) = -\sum p_i \log p_i$ | Average uncertainty |
 | Cross-entropy | $H(p, q) = -\sum p_i \log q_i$ | Prediction error |
 | KL divergence | $D_{\text{KL}}(p\|q) = \sum p_i \log \frac{p_i}{q_i}$ | Distribution distance |
+
+← [Chapter 9](../09-chapter9-large-language-models.md) | [Table of Contents](../README.md) | [Appendix B](B-pytorch-api.md) →

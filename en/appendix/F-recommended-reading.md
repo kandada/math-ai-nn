@@ -2,6 +2,7 @@
 
 > This appendix lists core deep learning reference resources, organized by difficulty level.
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## F-1 Core Textbooks
@@ -63,3 +64,42 @@
 | HuggingFace Transformers | Pre-trained models |
 | Weights & Biases | Experiment tracking |
 | TensorBoard | Visualization |
+
+---
+
+## F-5 Online Resources
+
+### Official Framework Documentation
+
+- **PyTorch Official Docs**: https://pytorch.org/docs/stable/
+- **PyTorch Tutorials**: https://pytorch.org/tutorials/
+- **Hugging Face Transformers**: https://huggingface.co/docs/transformers/
+
+### Interactive Learning
+
+- **TensorFlow Playground**: https://playground.tensorflow.org/ — Intuitive neural network experimentation
+- **Distill.pub**: https://distill.pub/ — Visualized ML research papers
+- **3Blue1Brown Neural Networks Series**: YouTube — Best visual explanations
+
+### Blogs & Tutorials
+
+| Blog | URL | Focus |
+|:-----|:---|:------|
+| The Gradient | thegradientpub.com | Deep learning frontier insights |
+| Lil'Log (Lilian Weng) | lilianweng.github.io | Systematic technical blog |
+| Sebastian Ruder | ruder.io | NLP & optimizer deep analysis |
+| Colah's Blog | colah.github.io | Visual math explanations |
+
+---
+
+## F-6 Development Tools
+
+| Tool | Purpose |
+|:-----|:--------|
+| **PyTorch** | Deep learning framework (used in this book) |
+| **Jupyter Notebook / JupyterLab** | Interactive programming environment |
+| **TensorBoard / Weights & Biases** | Experiment visualization & tracking |
+| **MLflow** | ML lifecycle management |
+
+← [Appendix E](E-exercise-answers.md) | [Table of Contents](../README.md) |
+

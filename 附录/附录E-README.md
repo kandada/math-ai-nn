@@ -2,6 +2,7 @@
 
 > 本附录提供各章课后练习的参考答案与解析。
 
+> © xiefujin · Contact: 490021684@qq.com · Licensed under CC BY-NC-SA 4.0
 ---
 
 ## 第1章 神经网络的思想
