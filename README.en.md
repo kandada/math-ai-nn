@@ -77,6 +77,12 @@ A preprint paper based on this book has been published:
 >
 > **DOI:** [https://doi.org/10.6084/m9.figshare.32692401](https://doi.org/10.6084/m9.figshare.32692401)
 
+## Book DOI
+
+> **The Mathematics of AI Neural Networks**
+>
+> **DOI:** [https://doi.org/10.5281/zenodo.20729335](https://doi.org/10.5281/zenodo.20729335)
+
 ## License
 
 This work is licensed under **CC BY-NC-SA 4.0**. See [LICENSE](LICENSE) for details.

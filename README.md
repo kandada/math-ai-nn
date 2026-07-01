@@ -72,6 +72,12 @@ manuscript/
 >
 > **DOI：** [https://doi.org/10.6084/m9.figshare.32692401](https://doi.org/10.6084/m9.figshare.32692401)
 
+## 书籍 DOI
+
+> **《AI神经网络的数学——用Python、PyTorch讲解》**
+>
+> **DOI：** [https://doi.org/10.5281/zenodo.20729963](https://doi.org/10.5281/zenodo.20729963)
+
 ## 许可
 
 本作品遵循 [LICENSE](LICENSE) 文件中的完整许可条款。
